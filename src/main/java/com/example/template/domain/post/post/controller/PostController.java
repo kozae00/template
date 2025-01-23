@@ -2,17 +2,18 @@ package com.example.template.domain.post.post.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/posts") // 모든 요청에 /posts를 붙여줌
 public class PostController {
-    @GetMapping("/write")
+    @GetMapping("/write") // 값을 받으니깐 GET
     @ResponseBody
     public String showWrite() {
         return """
-                <form action="/posts/doWrite">
+                <form action="/posts/doWrite", method="post"> 
                     <input type="text" name="title" placeholder="제목" />
                     <textarea name = "content"></textarea>
                     <input type = "submit" value="등록" />
@@ -20,7 +21,7 @@ public class PostController {
                 """;
     }
 
-    @GetMapping("/doWrite")
+    @PostMapping("/doWrite") // 값을 보내니깐 POST
     @ResponseBody
     public String doWrite(String title, String content) {
         return """
