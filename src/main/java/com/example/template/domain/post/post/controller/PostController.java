@@ -24,10 +24,19 @@ public class PostController {
     @PostMapping("/write") // 처리 -> 값을 보내니깐 POST
     @ResponseBody
     public String doWrite(String title, String content) {
-        return """
-                <h1>게시물 조회</h1>
-                <div>%s</div>
-                <div>%s</div>
-                """.formatted(title, content);
+
+        if (title.isBlank() || title == null) {
+            return "제목을 입력해주세요";
+        }
+
+        if (content.isBlank() || content == null) {
+            return "내용을 입력해주세요";
+        }
+            return """
+                    <h1>게시물 조회</h1>
+                    <div>%s</div>
+                    <div>%s</div>
+                    """.formatted(title, content);
+
     }
 }
