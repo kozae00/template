@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/posts") // 모든 요청에 /posts를 붙여줌
 public class PostController {
-    @GetMapping("/write") // 값을 받으니깐 GET
+    @GetMapping("/write") // 폼 보여주기 -> 값을 받으니깐 GET
     @ResponseBody
     public String showWrite() {
         return """
-                <form action="/posts/doWrite", method="post"> 
+                <form method="post"> 
                     <input type="text" name="title" placeholder="제목" />
                     <textarea name = "content"></textarea>
                     <input type = "submit" value="등록" />
@@ -21,7 +21,7 @@ public class PostController {
                 """;
     }
 
-    @PostMapping("/doWrite") // 값을 보내니깐 POST
+    @PostMapping("/write") // 처리 -> 값을 보내니깐 POST
     @ResponseBody
     public String doWrite(String title, String content) {
         return """
