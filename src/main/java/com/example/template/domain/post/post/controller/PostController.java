@@ -12,13 +12,7 @@ public class PostController {
     @GetMapping("/write") // 폼 보여주기 -> 값을 받으니깐 GET
     @ResponseBody
     public String showWrite() {
-        return """
-                <form method="post">
-                    <input type="text" name="title" placeholder="제목" />
-                    <textarea name = "content"></textarea>
-                    <input type = "submit" value="등록" />
-                </form>
-                """;
+        return getFormHtml("");
     }
 
     @PostMapping("/write") // 처리 -> 값을 보내니깐 POST
@@ -26,47 +20,19 @@ public class PostController {
     public String doWrite(String title, String content) {
 
         if (title.isBlank() || title == null) {
-            return """
-                <div>%s</div>
-                <form method="post">
-                    <input type="text" name="title" placeholder="제목" />
-                    <textarea name = "content"></textarea>
-                    <input type = "submit" value="등록" />
-                </form>
-                """.formatted("제목을 입력해주세요");
+            return getFormHtml("제목을 입력해주세요");
         }
 
         if (content.isBlank() || content == null) {
-            return """
-                <div>%s</div>
-                <form method="post">
-                    <input type="text" name="title" placeholder="제목" />
-                    <textarea name = "content"></textarea>
-                    <input type = "submit" value="등록" />
-                </form>
-                """.formatted("내용을 입력해주세요");
+            return getFormHtml("내용을 입력해주세요");
         }
 
         if (title.length() < 5) {
-            return """
-                <div>%s</div>
-                <form method="post">
-                    <input type="text" name="title" placeholder="제목" />
-                    <textarea name = "content"></textarea>
-                    <input type = "submit" value="등록" />
-                </form>
-                """.formatted("제목을 5글자 이상 입력해주세요");
+            return getFormHtml("제목을 5글자 이상 입력해주세요");
         }
         
         if(content.length() < 10) {
-            return """
-                <div>%s</div>
-                <form method="post">
-                    <input type="text" name="title" placeholder="제목" />
-                    <textarea name = "content"></textarea>
-                    <input type = "submit" value="등록" />
-                </form>
-                """.formatted("내용을 10글자 이상 입력해주세요");
+            return getFormHtml("내용을 10글자 이상 입력해주세요");
         }
 
             return """
@@ -76,4 +42,16 @@ public class PostController {
                     """.formatted(title, content);
 
     }
+
+    private String getFormHtml(String errorMessage) {
+        return """
+                <div>%s</div>
+                <form method="post">
+                    <input type="text" name="title" placeholder="제목" /><br>
+                    <textarea name = "content"></textarea><br>
+                    <input type = "submit" value="등록" /><br>
+                </form>
+                """.formatted(errorMessage);
+    }
+
 }
