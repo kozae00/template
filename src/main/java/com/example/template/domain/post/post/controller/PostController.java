@@ -21,26 +21,26 @@ import java.util.stream.Collectors;
 @RequestMapping("/posts")
 public class PostController {
 
-    private List<Post> posts = new ArrayList<>();
+    private List<Post> posts = new ArrayList();
     private long lastId = 3L;
 
     public PostController() {
         Post p1 = Post.builder()
                 .id(1L)
                 .title("title1")
-                .content("content1")
+                .content("title1")
                 .build();
 
         Post p2 = Post.builder()
                 .id(2L)
                 .title("title2")
-                .content("content2")
+                .content("title2")
                 .build();
 
         Post p3 = Post.builder()
                 .id(3L)
                 .title("title3")
-                .content("content3")
+                .content("title3")
                 .build();
 
         posts.add(p1);
@@ -49,22 +49,23 @@ public class PostController {
     }
 
     @GetMapping("/write")
-    @ResponseBody
     public String showWrite() {
-        return getFormHtml("", "", "");
+        return "domain/post/post/write";
     }
 
     @AllArgsConstructor
     @Getter
     public static class WriteForm {
-        @NotBlank(message = "01 - 제목을 입력해주세요.")
-        @Length(min = 5, message = "02 - 제목은 5글자 이상입니다.")
+        @NotBlank(message = "01-제목을 입력해주세요.")
+        @Length(min = 5, message = "02-제목은 5글자 이상입니다.")
         private String title;
-        @NotBlank(message = "03 - 내용을 입력해주세요.")
-        @Length(min = 10, message = "04 - 내용은 10글자 이상입니다.")
+        @NotBlank(message = "03-내용을 입력해주세요.")
+        @Length(min = 10, message = "04-내용은 10글자 이상입니다.")
         private String content;
     }
 
+
+    // @ResponseBody를 빼면 반환값을 템플릿으로 인식한다.
     @PostMapping("/write")
     public String doWrite(@Valid WriteForm form, BindingResult bindingResult) {
 
@@ -77,8 +78,9 @@ public class PostController {
                     .map(msg -> msg.split("-")[1])
                     .collect(Collectors.joining("<br>"));
 
-            return getFormHtml(errorMessage, form.getTitle(), form.getContent());
+            return "domain/post/post/write";
         }
+
         Post post = Post.builder()
                 .id(++lastId)
                 .title(form.getTitle())
@@ -86,19 +88,19 @@ public class PostController {
                 .build();
 
         posts.add(post);
-//        return showList(); // showList()를 수행하면 브라우저가 새로고침 이후, POST 요청을 다시 보내게 됨
-        return "redirect:/posts"; // redirect를 사용하면 브라우저가 새로고침을 해서 showList()를 수행
+
+        return "redirect:/posts"; //리다이렉트
     }
 
     private String getFormHtml(String errorMsg, String title, String content) {
         return """
                 <div>%s</div>
                 <form method="post">
-                  <input type="text" name="title" placeholder="제목" value=%s> <br>
+                  <input type="text" name="title" placeholder="제목" value="%s"/> <br>
                   <textarea name="content">%s</textarea> <br>
                   <input type="submit" value="등록" /> <br>
                 </form>
-                """.formatted(errorMsg,title,content);
+                """.formatted(errorMsg, title, content);
     }
 
     @GetMapping
@@ -111,12 +113,11 @@ public class PostController {
 
         String ul = "<ul>" + lis + "</ul>";
 
+
         return """
                 <div>글 목록</div>
                 
-                <ul>
                 %s
-                </ul>
                 
                 <a href="/posts/write">글쓰기</a>
                 """.formatted(ul);
