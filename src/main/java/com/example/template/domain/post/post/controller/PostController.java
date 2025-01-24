@@ -39,7 +39,7 @@ public class PostController {
                     <h1>게시물 조회</h1>
                     <div>%s</div>
                     <div>%s</div>
-                    """.formatted(form.title, form.content);
+                    """.formatted(form.getTitle(), form.getContent());
 
     }
 
